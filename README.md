@@ -95,11 +95,29 @@ tests/                          Unit tests for the deterministic engine modules
    order (schema DDL, then the sample `plasma_etch_wafer_ingest` pipeline
    seed data).
 
-2. **Install dependencies:**
+2. **Install dependencies (pip):**
 
-   ```bash
-   make install-dev
-   ```
+  Create and activate a virtual environment, then install packages.
+
+  ```bash
+  python -m venv .venv
+  .venv\Scripts\activate
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+  pip install -r requirements-dev.txt
+  ```
+
+  Runtime packages (`requirements.txt`):
+
+  ```bash
+  pip install SQLAlchemy==2.0.35 psycopg2-binary==2.9.9 jsonschema==4.23.0 jsonpath-ng==1.6.1 boto3==1.35.36 anthropic==0.36.2 python-dotenv==1.0.1
+  ```
+
+  Development/test packages (`requirements-dev.txt`):
+
+  ```bash
+  pip install pytest==8.3.3 pytest-cov==5.0.0 ruff==0.6.9 moto==5.0.14
+  ```
 
 3. **Copy `.env.example` to `.env`** and adjust as needed (defaults match the
    docker-compose service).
