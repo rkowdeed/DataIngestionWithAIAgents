@@ -1,18 +1,20 @@
-# Python bytecode
 __pycache__/
 *.py[cod]
-
-# Virtual environments
+*.egg-info/
+.eggs/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
 .venv/
 venv/
-
-# Environment files
+env/
 .env
-
-# OS/editor
+*.log
 .DS_Store
 Thumbs.db
+dist/
+build/
+.idea/
 .vscode/
-
-# Jupyter
 .ipynb_checkpoints/

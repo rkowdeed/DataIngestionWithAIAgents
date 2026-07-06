@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: fab-ops-metadata-db
+    environment:
+      POSTGRES_DB: fab_ops
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ../sql:/docker-entrypoint-initdb.d
+      - fab_ops_pgdata:/var/lib/postgresql/data
+
+volumes:
+  fab_ops_pgdata:

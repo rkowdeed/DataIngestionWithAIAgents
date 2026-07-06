@@ -1,0 +1,23 @@
+{
+  "Name": "fab-ops-etl-s3-object-created",
+  "Description": "Triggers the metadata-driven ETL Step Functions state machine whenever a new JSON document lands in the raw ingestion bucket (HLD Section 2).",
+  "EventPattern": {
+    "source": ["aws.s3"],
+    "detail-type": ["Object Created"],
+    "detail": {
+      "bucket": {
+        "name": ["fab-ops-raw-landing"]
+      },
+      "object": {
+        "key": [{ "prefix": "mes/" }, { "prefix": "apc/" }, { "prefix": "spc/" }]
+      }
+    }
+  },
+  "Targets": [
+    {
+      "Id": "fab-ops-etl-state-machine",
+      "Arn": "arn:aws:states:REGION:ACCOUNT_ID:stateMachine:fab-ops-metadata-driven-etl",
+      "RoleArn": "arn:aws:iam::ACCOUNT_ID:role/fab-ops-eventbridge-to-stepfunctions-role"
+    }
+  ]
+}
