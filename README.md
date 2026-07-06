@@ -1,3 +1,3 @@
 # DataIngestionWithAIAgents
 
-Separate repository for the Data Ingestion with AI Agents project.
+Repository with scaffold structure for ETL jobs, big data ingestion, and AI agent setup/configuration.
