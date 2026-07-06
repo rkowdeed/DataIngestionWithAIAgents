@@ -1,0 +1,41 @@
+{
+  "lot": {
+    "id": "LOT-2026-000451",
+    "wafers": [
+      {
+        "id": "WAF-001",
+        "measurements": {
+          "chamberPressure": 4.82,
+          "rfPowerMax": 1250.0,
+          "gasFlowVariance": 0.031,
+          "chuckTemperature": 62.4,
+          "endpointDuration": 18450
+        }
+      },
+      {
+        "id": "WAF-002",
+        "measurements": {
+          "chamberPressure": 4.79,
+          "rfPowerMax": 1242.5,
+          "gasFlowVariance": 0.028,
+          "chuckTemperature": 61.9,
+          "endpointDuration": 18310
+        }
+      },
+      {
+        "id": "WAF-003",
+        "measurements": {
+          "chamberPressure": 55.10,
+          "rfPowerMax": 1260.0,
+          "gasFlowVariance": 0.033,
+          "chuckTemperature": 63.1,
+          "endpointDuration": 18520
+        }
+      }
+    ]
+  },
+  "equipment": {
+    "toolId": "ETCH-TOOL-07",
+    "recipeId": "RECIPE-OXIDE-ETCH-A3"
+  }
+}

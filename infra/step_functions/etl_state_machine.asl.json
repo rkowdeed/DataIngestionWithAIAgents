@@ -1,0 +1,83 @@
+{
+  "Comment": "Metadata-driven ETL orchestration: EventBridge (S3 PutObject) -> Step Functions -> Glue -> Aurora, per HLD Section 2",
+  "StartAt": "LoadPipelineMetadata",
+  "States": {
+    "LoadPipelineMetadata": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "Parameters": {
+        "FunctionName": "fab-ops-etl-resolve-pipeline-metadata",
+        "Payload": {
+          "bucket.$": "$.detail.bucket.name",
+          "key.$": "$.detail.object.key"
+        }
+      },
+      "ResultPath": "$.pipelineMetadata",
+      "Next": "RunGlueETLJob",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyMetadataResolutionFailure"
+        }
+      ]
+    },
+    "RunGlueETLJob": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::glue:startJobRun.sync",
+      "Parameters": {
+        "JobName": "fab-ops-metadata-driven-etl",
+        "Arguments": {
+          "--pipeline_name.$": "$.pipelineMetadata.Payload.pipeline_name",
+          "--source_key.$": "$.detail.object.key"
+        }
+      },
+      "ResultPath": "$.glueResult",
+      "Next": "EvaluateBatchOutcome",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "NotifyGlueJobFailure"
+        }
+      ]
+    },
+    "EvaluateBatchOutcome": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.glueResult.JobRunState",
+          "StringEquals": "SUCCEEDED",
+          "Next": "BatchSucceeded"
+        }
+      ],
+      "Default": "NotifyGlueJobFailure"
+    },
+    "BatchSucceeded": {
+      "Type": "Succeed"
+    },
+    "NotifyMetadataResolutionFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:REGION:ACCOUNT_ID:fab-ops-etl-alerts",
+        "Message": "Failed to resolve pipeline metadata for incoming S3 object.",
+        "Subject": "ETL Metadata Resolution Failure"
+      },
+      "Next": "BatchFailed"
+    },
+    "NotifyGlueJobFailure": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "TopicArn": "arn:aws:sns:REGION:ACCOUNT_ID:fab-ops-etl-alerts",
+        "Message": "Glue ETL job failed. Check metadata.error_record and metadata.audit_log for detail.",
+        "Subject": "ETL Glue Job Failure"
+      },
+      "Next": "BatchFailed"
+    },
+    "BatchFailed": {
+      "Type": "Fail"
+    }
+  }
+}
