@@ -1,10 +1,7 @@
-.PHONY: install install-dev db-up db-down test lint fmt run-sample
+.PHONY: install db-up db-down test lint fmt run-sample
 
 install:
 	pip install -r requirements.txt
-
-install-dev:
-	pip install -r requirements-dev.txt
 
 db-up:
 	docker compose -f docker/docker-compose.yml up -d
