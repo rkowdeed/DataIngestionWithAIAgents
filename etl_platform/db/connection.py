@@ -6,7 +6,7 @@ from contextlib import contextmanager
 from functools import lru_cache
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 
 from etl_platform.config import DB
 

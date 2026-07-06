@@ -17,7 +17,6 @@ import argparse
 import logging
 
 from etl_platform.aws import s3_client
-from etl_platform.db.metadata_repository import MetadataRepository
 from etl_platform.pipeline.orchestrator import PipelineOrchestrator
 from etl_platform.utils.logging_config import configure_logging
 
@@ -38,7 +37,6 @@ def main() -> None:
     args = parse_args()
 
     orchestrator = PipelineOrchestrator(pipeline_name=args.pipeline_name)
-    metadata_repo = MetadataRepository(orchestrator.engine)
 
     # Resolve S3 source configuration for this pipeline.
     with orchestrator.engine.connect() as conn:
